@@ -1,4 +1,4 @@
-@extends('layouts.app')
+@extends('layouts.dashboard')
 <style>
 
   .input-group2{
@@ -23,6 +23,11 @@
     padding-bottom: 20px;
   }
 
+  .indigo{
+    background-color: #C5CAE9;
+    color: #1A237E;
+    font-weight: 900;
+  }
   .lang_error{
     color: #EF5350;
     padding-left: 10px;
@@ -32,18 +37,17 @@
 @section('content')
 <div class="container">
     <div class="row">
-            <div class="panel panel-default">
-              <div class="container">
-                  <h1 class="col-lg-10 col-md-offset-1 page-title">@lang('messages.register_title')</h1>
-                <div class="col-lg-10 col-md-offset-1 wel">
-                <div class="row">
-                      <form  id="register_student_form">
+              <div dir="auto" class="container-fluid" >
+                  <h1  class="col-md-12  page-title">@lang('messages.register_title')</h1>
+                  <div class="col-md-12 wel">
+                      <form  id="register_student_form" action="/post_student" method="post" onsubmit="return validate_form();">
                           <div class="input-group2">
                             <!-- name English -->
                             <div class="row">
+                              <input type="hidden" name="_token" value="{{ csrf_token() }}">
                                 <div class="col-sm-4 form-group">
                                   <label>@lang('messages.first_name_en')</label><span class="lang_error" id="error_en1"></span>
-                                  <input type="text" required="true" name="firstname_en" placeholder=@lang('messages.first_name_en_holder') class="form-control must-english">
+                                  <input type="text" required="true" name="first_name_en" placeholder=@lang('messages.first_name_en_holder') class="form-control must-english">
                                 </div>
                                 <div class="col-sm-4 form-group">
                                   <label>@lang('messages.middle_name_en')</label><span class="lang_error" id="error_en2"></span>
@@ -58,7 +62,7 @@
                             <div class="row">
                                 <div class="col-sm-4 form-group">
                                   <label>@lang('messages.first_name_ar')</label><span class="lang_error" id="error_ar1"></span>
-                                  <input type="text" required="true" name="firstname_ar" placeholder=@lang('messages.first_name_ar_holder') class="form-control must-arabic">
+                                  <input type="text" required="true" name="first_name_ar" placeholder=@lang('messages.first_name_ar_holder') class="form-control must-arabic">
                                 </div>
                                 <div class="col-sm-4 form-group">
                                   <label>@lang('messages.middle_name_ar')</label><span class="lang_error" id="error_ar2"></span>
@@ -423,13 +427,11 @@
                           </div>
                         </div>
                         <span hidden class="hidden_message_en">@lang('errors.use_english')</span>
-                        <span hidden class="hidden_message_ar">@lang('errors.use_arabic')</span>
-                        <button type="submit" class="col-md-4 col-md-offset-4 btn btn-lg btn-info">@lang('messages.submit')</button>
+                        <span hidden class="hidden_message_ar">@lang('errors.use_arabic')</span></br>
+                        <button type="submit" class="col-md-2 col-md-offset-5 btn indigo">@lang('messages.submit')</button>
 
                       </form>
 
-                </div>
-                </div>
             </div>
     </div>
 </div>
@@ -438,27 +440,18 @@
 <script type="text/javascript">
   // prepare the form when the DOM is ready
   $(document).ready(function() {
-      $("#myform").on('submit', function(e) {
-        valid = validate();
-        if(valid==false){
-          e.preventDefault();
-        }
-      });
+      $('#register_student_form').ajaxForm( { beforeSubmit: validate } );
   });
-  function validate(){
-    //clear previous errors
+  function validate_form(){
     var all_errors = $(".lang_error");
     all_errors.html("");
-
-    //validation constants
     valide = true;
-    last_element_with_error = null;
     var arabics = $(".must-arabic");
     for(var i = 0; i < arabics.length; i++){
       s = arabics[i].value;
       if(s.match(".*[a-z].*")) {
         error_msg = $(".hidden_message_ar").html();
-        last_element_with_error = arabics[i];
+
         $("#error_ar"+(i+1)).html(error_msg);
         valid = false;
       }
@@ -467,17 +460,11 @@
     for(var i = 0; i < en.length; i++){
       s = en[i].value;
       if(!s.match(".*[a-z].*")) {
-        last_element_with_error = en[i];
         error_msg = $(".hidden_message_en").html();
         $("#error_en"+(i+1)).html(error_msg);
         valid = false;
       }
     }
-    if(!valid){
-      last_element_with_error.scrollIntoView(true);
-
-    }
-    alert(valid);
     return valid;
   }
 </script>

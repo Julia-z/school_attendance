@@ -4,7 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests;
 use Illuminate\Http\Request;
-
+use app\Http\ORM\Student;
 class RegisterController extends Controller
 {
     /**
@@ -24,6 +24,8 @@ class RegisterController extends Controller
      */
     public function index()
     {
-        return view('register');
+        return view('dashboard.register');
     }
+
+
 }

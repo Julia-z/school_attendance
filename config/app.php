@@ -14,6 +14,8 @@ return [
     */
 
     'env' => env('APP_ENV', 'production'),
+    'timezone' => 'Asia/Amman',
+
 
     /*
     |--------------------------------------------------------------------------
@@ -65,7 +67,7 @@ return [
     |
     */
 
-    'locale' => 'ar',
+    'locale' => 'en',
 
     /*
     |--------------------------------------------------------------------------
@@ -156,6 +158,13 @@ return [
         App\Providers\EventServiceProvider::class,
         App\Providers\RouteServiceProvider::class,
 
+
+        /*
+        * Excel
+        */
+        Maatwebsite\Excel\ExcelServiceProvider::class,
+
+
     ],
 
     /*
@@ -201,6 +210,8 @@ return [
         'URL' => Illuminate\Support\Facades\URL::class,
         'Validator' => Illuminate\Support\Facades\Validator::class,
         'View' => Illuminate\Support\Facades\View::class,
+        'Excel' => Maatwebsite\Excel\Facades\Excel::class,
+
 
     ],
 
