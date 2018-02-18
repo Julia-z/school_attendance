@@ -127,7 +127,12 @@ return [
     'school' => 'School',
     'relationship_id' => 'Relationship',
     'welcome' => 'Welcome',
-    'signout' => 'Signout'
+    'signout' => 'Signout',
+
+    'student_first_name_en' => 'Student First Name (En)',
+    'student_middle_name_en' => 'Student Middle Name (En)',
+    'student_last_name_en' => 'Student Last Name (En)',
+    'student_date_of_birth' => 'Student Date of Birth'
 
 
 ];

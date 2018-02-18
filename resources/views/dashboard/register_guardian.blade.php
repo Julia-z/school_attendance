@@ -1,9 +1,17 @@
 @extends('layouts.dashboard')
 <style>
+  #error_field{
+    padding: 10px;
+    color: red;
+  }
+  #success_field{
+    padding: 10px;
+    color: green;
+  }
 </style>
 @section('pg')
 <h1 class="title-bar-title">
-  <span class="d-ib">@lang('titles.register_student')</span>
+  <span class="d-ib">@lang('titles.register_family')</span>
 </h1>
 <div class="row">
       <div class="col-md-8 col-md-offset-1">
@@ -17,16 +25,16 @@
                     <label class="col-sm-3 control-label" for="form-control-{{ $i+1 }}">@lang('messages.' . $field)@if($required[$i]) <span class="req">*</span> @endif</label>
 
                     <div class="col-sm-9">
-                      @if($data_types[$i] == 'text' || $data_types[$i] == 'text-en' || $data_types[$i] == 'text-ar')
+                      @if($data_types[$i] == 'text' || $data_types[$i] == 'text-en' || $data_types[$i] == 'text-ar' )
                         <input class="form-control" id="form-control-{{ $i+1 }}" type="text" @if($required[$i]) required @endif name="{{ $field }}">
-                      @elseif($data_types[$i] == 'date' || $data_types[$i] == 'phone')
-                        <div class='input-group date' id='datetimepicker10'>
-                            <input type='text' class="form-control" />
-                            <span class="input-group-addon">
-                                <span class="glyphicon glyphicon-calendar">
-                                </span>
-                            </span>
+                      @elseif($data_types[$i] == 'phone')
+                        <input class="form-control" id="form-control-{{ $i+1 }}" type="text" @if($required[$i]) required @endif name="{{ $field }}">
+                      @elseif($data_types[$i] == 'date')
+                      <div class="input-with-icon">
+                          <input class="form-control" name="{{ $field }}" type="text" value="2005-11-05" data-provide="datepicker" data-date-autoclose="true" data-date-format="yyyy-mm-dd" data-date-start-view="decade" >
+                          <span class="icon icon-calendar input-icon"></span>
                         </div>
+
                       @else
                         <select class="form-control" name="{{ $field }}">
                           @if(!$required[$i])<option value="">Select -- </option>@endif
@@ -40,12 +48,53 @@
                   @endif
                 @endforeach
                 <div class="center"style="margin-bottom:10px;">
-                <button type="submit" class="btn btn-primary btn-success" id="submit_student">@lang('messages.register')</button></br>
+                <button type="submit" class="btn btn-primary btn-success" id="submit_family" disabled>@lang('messages.register')</button></br>
               </div>
           </form>
+          <div class="center" style="margin-bottom:10px;">
+          <button onclick="validate()" class="btn btn-primary btn-default">@lang('messages.validate_student')</button><br/>
           <div id="error_field"> </div>
+          <div id="success_field"> </div>
+          </div>
           </div>
         </div>
       </div>
     </div>
+    <script>
+    function validate(){
+      document.getElementById('error_field').innerHTML = '';
+      document.getElementById('success_field').innerHTML = '';
+      var unique = [
+        @foreach ($validate_check_against as $id=>$field)
+        '{{ $field }}'
+        @if($i !== count($validate_check_against) -1) ,
+        @endif
+        @endforeach
+      ];
+      var my_url = 'validate_student?';
+      var values = [];
+      for(var i = 0; i < unique.length; i++){
+        var unique_split = unique[i].split("student_")[1];
+        values.push(document.getElementsByName(unique[i])[0].value);
+        my_url += unique_split + "=" + values[i];
+        if(i < unique.length) my_url += "&";
+      }
+
+      $.ajax({
+               type:'GET',
+               url:my_url,
+               success:function(data){
+                   if(data['valid'] != 1){
+                    document.getElementById("submit_family").disabled = false;
+                    document.getElementById('success_field').innerHTML = 'Student validated from the server';
+
+                  }
+                  else {
+                    document.getElementById('error_field').innerHTML = 'Student does not exist';
+                  }
+               }
+            });
+    }
+  </script>
+
 @endsection

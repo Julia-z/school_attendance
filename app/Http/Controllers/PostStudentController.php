@@ -88,12 +88,12 @@ class PostStudentController extends Controller
           $address_en = Request::get('home_address_en');
           $address_ar = Request::get('home_address_ar');
 
-          $medical_info_id = getGUID();
           $disability_type_id  = Request::get('disability_type');
           $school_id = Auth::user()->school_id;
-
+          $medical_info_id = null;
           if($disability_type_id > 0){
             $disability_desc = Request::get('disability_desc');
+            $medical_info_id = getGUID();
 
             MedicalInfo::create([
               'medical_info_id' => $medical_info_id,

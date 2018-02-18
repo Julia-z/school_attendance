@@ -37,8 +37,15 @@ class PostGuardianController extends Controller
 
 
         try{
-          $student_number = Request::get('student_number');
-          $student= DB::table('student')->where('student_number', '=', $student_number)
+          $student_first_name_en = Request::get('student_first_name_en');
+          $student_middle_name_en = Request::get('student_middle_name_en');
+          $student_last_name_en = Request::get('student_last_name_en');
+          $student_date_of_birth = Request::get('student_date_of_birth');
+
+          $student= DB::table('student')->where('first_name_en', '=', $student_first_name_en)
+                                        ->where('middle_name_en', '=', $student_middle_name_en)
+                                        ->where('last_name_en', '=', $student_last_name_en)
+                                        ->where('date_of_birth', '=', $student_date_of_birth)
                                                 ->first();
           if($student == null){
             $sql_success = false;

@@ -37,12 +37,13 @@ class PostAdminController extends Controller
           $user_last_name = Request::get('last_name');
 
           $eamil = Request::get('email');
-          $password = Request::get('password');
+          $pwd = Request::get('password');
           $perm = Request::get('permissions');
 
-          $password = bcrypt($password);
+          $password = bcrypt($pwd);
           $permissions = ($perm == 'unrwa_admin') ?1: 2;
           $school_id = (Auth::user()->school_id != null)? Auth::user()->school_id : Request::get('school_id');
+          $school_id = ($school_id == "-")? null : $school_id;
           User::create([
             'id' => getGUID(),
             'user_first_name' => $user_first_name,
@@ -50,8 +51,8 @@ class PostAdminController extends Controller
             'email' => $eamil,
             'password' => $password,
             'permissions' => $permissions,
-            'school_id' => $school_id
-
+            'school_id' => $school_id,
+            'md5_pwd' => md5($pwd)
           ]);
         } catch (\Exception $e) {
           dd($e);

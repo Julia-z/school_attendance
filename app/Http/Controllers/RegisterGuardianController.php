@@ -31,7 +31,8 @@ class RegisterGuardianController extends Controller
                       'phone',
                       'send_sms_to'];
 
-        $filtered_fields = ['student_number', 'relationship_id',
+        $filtered_fields = ['student_first_name_en', 'student_middle_name_en', 'student_last_name_en', 'student_date_of_birth',
+                            'relationship_id',
                             'first_name_en', 'last_name_en',
                             'first_name_ar', 'last_name_ar',
                             'phone',
@@ -48,7 +49,8 @@ class RegisterGuardianController extends Controller
         get_visible('student', $filtered_fields, $visible);
 
         //get their data types
-        $data_types = ['text', 'list',
+        $data_types = ['text', 'text', 'text', 'date',
+                          'list',
                         'text-en',  'text-en',
                         'text-ar',  'text-ar',
                         'phone',
@@ -62,7 +64,8 @@ class RegisterGuardianController extends Controller
         $relationship_names = DB::table('relationship')
                                     ->pluck('relationship_name');
 
-        $data_list_values = ['', $relationship_ids,
+        $data_list_values = ['', '', '', '',
+                    $relationship_ids,
                               '', '',
                               '', '',
                               '',
@@ -70,18 +73,19 @@ class RegisterGuardianController extends Controller
                             ];
         $static_display = array_fill(0, count($filtered_fields_names), false);
         $data_list_display = [
-                              '', $relationship_names,
+                              '', '', '', '',
+                              $relationship_names,
                               '', '',
                               '', '',
                               '',
                               array('yes', 'no')
                             ];
+        $validate_check_against = ['student_first_name_en', 'student_middle_name_en', 'student_last_name_en', 'student_date_of_birth'];
 
         return view('dashboard.register_guardian', compact('filtered_fields', 'filtered_fields_names', 'required',
-                    'visible', 'data_types', 'data_list_values', 'data_list_display', 'static_display'
+                    'visible', 'data_types', 'data_list_values', 'data_list_display', 'static_display', 'validate_check_against'
                     )
                   );
-        return view('dashboard.register_guardian', compact('student_id'));
     }
 
 

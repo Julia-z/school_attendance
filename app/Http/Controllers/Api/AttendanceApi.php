@@ -28,7 +28,11 @@ class AttendanceApi extends Controller
 
           $return = new stdClass;
           $return->status = 400;
-          $return->error = 'Please provide a username';
+
+          $response = new stdClass;
+          $response->status = 0;
+          $response->error = 'Please provide a username';
+          $return->response = $response;
 
           error_log(json_encode($return),0);
           return json_encode($return);
@@ -37,7 +41,11 @@ class AttendanceApi extends Controller
       if(is_null(Request::get('password'))){
         $return = new stdClass;
         $return->status = 400;
-        $return->error = 'Please provide a password';
+
+        $response = new stdClass;
+        $response->status = 0;
+        $response->error = 'Please provide a password';
+        $return->response = $response;
 
         error_log(json_encode($return),0);
         return json_encode($return);
@@ -52,7 +60,11 @@ class AttendanceApi extends Controller
         if($user == false){
           $return = new stdClass;
           $return->status = 401;
-          $return->error = 'Incorrect username or password';
+
+          $response = new stdClass;
+          $response->status = 0;
+          $response->error = 'Incorrect username or password';
+          $return->response = $response;
 
           error_log(json_encode($return),0);
           return json_encode($return);
@@ -71,7 +83,7 @@ class AttendanceApi extends Controller
 
           $response = new stdClass;
           $response->status = 1;
-          $response->message = "Successful login";
+          $response->error = "";
           $return->response = $response;
 
           $return->school_admins = $admins;
@@ -86,12 +98,18 @@ class AttendanceApi extends Controller
 
         }
       }catch (\Exception $e) {
+        dd($e);
         $return = new stdClass;
-        $return->status = 500;
-        $return->error = 'Something went wrong. Please try again later.';
+        $return->status = 400;
+
+        $response = new stdClass;
+        $response->status = 0;
+        $response->error = 'Something went wrong please try again later.';
+        $return->response = $response;
 
         error_log(json_encode($return),0);
         return json_encode($return);
+
       }
   }
 
@@ -100,7 +118,11 @@ class AttendanceApi extends Controller
       if(is_null(Request::get('username'))){
         $return = new stdClass;
         $return->status = 400;
-        $return->error = 'Please provide a username';
+
+        $response = new stdClass;
+        $response->status = 0;
+        $response->error = 'Please provide a username';
+        $return->response = $response;
 
         error_log(json_encode($return),0);
         return json_encode($return);
@@ -109,7 +131,11 @@ class AttendanceApi extends Controller
       if(is_null(Request::get('password'))){
         $return = new stdClass;
         $return->status = 400;
-        $return->error = 'Please provide a password';
+
+        $response = new stdClass;
+        $response->status = 0;
+        $response->error = 'Please provide a passowrd';
+        $return->response = $response;
 
         error_log(json_encode($return),0);
         return json_encode($return);
@@ -123,7 +149,11 @@ class AttendanceApi extends Controller
       if($user == false){
         $return = new stdClass;
         $return->status = 401;
-        $return->error = 'Incorrect username or password';
+
+        $response = new stdClass;
+        $response->status = 0;
+        $response->error = 'Incorrect username or password!';
+        $return->response = $response;
 
         error_log(json_encode($return),0);
         return json_encode($return);
@@ -233,12 +263,12 @@ class AttendanceApi extends Controller
           $response->status = 0;
           $s = ($count_failures > 1)? 's' : '';
           $is_are = ($count_failures > 1)? 'are' : 'is';
-          $response->message = $count_failures . " student" . $s . " whose name" . $s . " " .$is_are . ": " . substr($names, 0, strlen($names) - 2)
+          $response->error = $count_failures . " student" . $s . " whose name" . $s . " " .$is_are . ": " . substr($names, 0, strlen($names) - 2)
                                   . " should be validated from the website!";
         }
         else{
           $response->status = 1;
-          $response->message = count($students) + " successfully Added";
+          $response->error = ""; //count($students) + " successfully Added";
         }
 
 
@@ -255,7 +285,11 @@ class AttendanceApi extends Controller
       if(is_null(Request::get('username'))){
         $return = new stdClass;
         $return->status = 400;
-        $return->error = 'Please provide a username';
+
+        $response = new stdClass;
+        $response->status = 0;
+        $response->error = 'Please provide a username';
+        $return->response = $response;
 
         error_log(json_encode($return),0);
         return json_encode($return);
@@ -264,7 +298,11 @@ class AttendanceApi extends Controller
       if(is_null(Request::get('password'))){
         $return = new stdClass;
         $return->status = 400;
-        $return->error = 'Please provide a password';
+
+        $response = new stdClass;
+        $response->status = 0;
+        $response->error = 'Please provide a password';
+        $return->response = $response;
 
         error_log(json_encode($return),0);
         return json_encode($return);
@@ -279,7 +317,11 @@ class AttendanceApi extends Controller
       if($user == false){
         $return = new stdClass;
         $return->status = 401;
-        $return->error = 'Incorrect username or passowrd';
+
+        $response = new stdClass;
+        $response->status = 0;
+        $response->error = 'Incorrect username and password';
+        $return->response = $response;
 
         error_log(json_encode($return),0);
         return json_encode($return);
@@ -299,7 +341,11 @@ class AttendanceApi extends Controller
         if(strlen($missing) > 0){
           $return = new stdClass;
           $return->status = 400;
-          $return->error = $missing . ' is missing';
+
+          $response = new stdClass;
+          $response->status = 0;
+          $response->error = $missing . ' is missing!';
+          $return->response = $response;
 
           error_log(json_encode($return),0);
           return json_encode($return);
@@ -418,7 +464,7 @@ class AttendanceApi extends Controller
         return false;
       }
 
-      if($user->password != $password){
+      if(strtoupper($user->md5_pwd) != strtoupper($password)){
         return false;
 
       }
@@ -434,7 +480,7 @@ class AttendanceApi extends Controller
             'user_first_name as first_name',
             'user_last_name as last_name',
             'email as email',
-            'password',
+            'md5_pwd as password',
             'school_id as school_id'
             )
         ->whereNotNull('school_id')

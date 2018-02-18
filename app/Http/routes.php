@@ -33,6 +33,10 @@ Route::post('/post_family', 'PostGuardianController@store');
 Route::get('/register_admin', 'RegisterAdminController@index');
 Route::post('/post_admin', 'PostAdminController@store');
 Route::get('/validate_student', 'CheckStudentController@index');
+Route::resource('/tables', 'TablesController');
+Route::resource('/edit_entry', 'EditController');
+
+Route::resource('/sync', 'SyncController');
 
 // API
 Route::post('api/login', 'APi\AttendanceApi@login');
